@@ -44,7 +44,7 @@
         for (var j=50; j<100; j++){
             imglist[j] = imglist[j-50+1];
         }
-        shuffle(imglist)
+        imglist = shuffle(imglist)
 
     }
 
@@ -99,7 +99,7 @@
             showedimg = {}
             tempshowimg = -1
             tempshowimg2 = -1
-            shuffle(imglist)
+            imglist = shuffle(imglist)
             return;
         }
         if (cursorimg==tempshowimg||cursorimg==tempshowimg2||showedimg[cursorimg])
