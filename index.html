@@ -92,6 +92,12 @@
     }
 
     function mouseClicked() {
+        if (won()){
+            alert('You Win');
+            showedimg[cursorimg] = {}
+            tempshowimg = -1
+            tempshowimg2 = -1
+        }
         if (cursorimg==tempshowimg||cursorimg==tempshowimg2||showedimg[cursorimg])
             return;
         if (cursorimg!=-1){
@@ -114,12 +120,7 @@
             }
         }
 
-        if (won()){
-            alert('You Win');
-            showedimg[cursorimg] = {}
-            tempshowimg = -1
-            tempshowimg2 = -1
-        }
+        
     }
 
     function won(){
