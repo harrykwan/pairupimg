@@ -16,124 +16,172 @@
           }
       </style>
     
-    <h1>PAIR-UP IMAGE</h1>
-    <p style="width: 500px;">
+    <div id="board2"></div>
+    <div id="board1"></div>
+
+    <!-- <h1>PAIR-UP IMAGE</h1> -->
+    <!-- <p style="width: 500px;">
         When you first click the grid, the image will be shown. After that, when you choose another grid, if the images match, it will keep showing, otherwise, it will be disappeared after 0.5 second. Try to remember and match them all to win.
-    </p>
-    <script src="p5.js"></script>
-    <script>
+    </p> -->
+
+    <!-- <script src="p5.js"></script> -->
+    <script src="https://harrykwan.github.io/pairupimg/p5.js"></script>
+    <script>           
+
+    var totalclick = 0;
+
+    var board2 = function(p){
+        var myfont = p.loadFont('McLaren-Regular.ttf');
+
+        p.setup = function() {
+            p.createCanvas(500, 230);
+            
+            
+        }
+        p.draw = function () {
+            p.clear();
+            p.textSize(15);
+            p.text('When you first click the grid, the image will be shown. After that,', 0, 100);
+            p.text('when you choose another grid and if the images match, it will keep showing,', 0, 120);
+            p.text('otherwise, it will be disappeared after 0.5 second. ', 0, 140);
+            p.text('Try to remember and match them all to win.', 0, 160);
+
+            p.textFont(myfont);
+            p.textSize(30);
+            p.text('PAIR-UP IMAGE', 0, 50);
+
+            p.textSize(20);
+            p.text('Total Clicked: '+totalclick, 0, 200);
+        }
+    }
+    var myp5 = new p5(board2, 'board2');
     
-    let imglist = [];
-    let imgnum = 10;
-
-    function shuffle(a) {
-        for (var j=0; j<a.length; j++) {
-            var ranpo = parseInt(random(0,a.length-1));
-            var temp = a[ranpo];
-            a[ranpo] = a[j];
-            a[j] = temp;
-        }
-        return a;
-    }
-
-    function preload() {
-        // imgnum = random(0,800);
-        for (var j=0; j<50; j++){
-            imglist[j] = createImg('https://picsum.photos/id/'+parseInt(j+imgnum)+'/200/200');
-        }
-        for (var j=50; j<100; j++){
-            imglist[j] = imglist[j-50+1];
-        }
-        imglist = shuffle(imglist)
-
-    }
 
 
-    function setup() {
-        createCanvas(500, 500);
-        background('#000');
-    }
+    var board1 = function (p){
 
-    var cursorimg = -1;
-    var showedimg = {};
-    var tempshowimg = -1;
-    var tempshowimg2 = -1;
+        let imglist = [];
+        let imgnum = 10;
+        let gridsize = 6;
+        let h1font, pfont;
 
-    function draw() {
-        background('#EEEEEE');
-
-        //For (var BEGIN; END; INTERVAL){
-        //DO SOMETHING }
-        var nowimgnum = 0;
-        cursorimg = -1;
-        for (var x = 0; x < width; x += width / 10) {
-            for (var y = 0; y < height; y += height / 10) {
-                stroke(0);
-                strokeWeight(1);
-                if ((mouseX>x&&mouseX<x+width/10&&mouseY>y&&mouseY<y+height/10)){
-                    cursorimg = nowimgnum;
-                }
-                if (
-                    // (mouseX>x&&mouseX<x+width/10&&mouseY>y&&mouseY<y+height/10)||
-                    showedimg[nowimgnum]||
-                    nowimgnum==tempshowimg||
-                    nowimgnum==tempshowimg2
-                ){
-                    image(imglist[nowimgnum],x,y,50,50);
-                    // cursorimg = nowimgnum;
-                }
-                
-                nowimgnum++;
-                line(x, 0, x, height);
-                line(0, y, width, y);
+        p.shuffle = function (a) {
+            for (var j=0; j<a.length; j++) {
+                var ranpo = parseInt(p.random(0,a.length-1));
+                var temp = a[ranpo];
+                a[ranpo] = a[j];
+                a[j] = temp;
             }
-            line(width, 0, width, height);
-            line(0, height, width, height);
+            return a;
         }
-        // image(img,0,0,50,50)
-    }
 
-    function mouseClicked() {
-        if (won()){
-            alert('You Win');
-            showedimg = {}
-            tempshowimg = -1
-            tempshowimg2 = -1
-            imglist = shuffle(imglist)
-            return;
+        p.preload = function () {
+            // imgnum = random(0,800);
+            for (var j=0; j<gridsize*gridsize/2; j++){
+                imglist[j] = p.createImg('https://picsum.photos/id/'+parseInt(j+imgnum)+'/200/200');
+            }
+            for (var j=gridsize*gridsize/2; j<gridsize*gridsize; j++){
+                imglist[j] = imglist[j-gridsize*gridsize/2];
+            }
+            imglist = p.shuffle(imglist)
+
         }
-        if (cursorimg==tempshowimg||cursorimg==tempshowimg2||showedimg[cursorimg])
-            return;
-        if (cursorimg!=-1){
-            if (tempshowimg==-1){
-                tempshowimg = cursorimg;
-            } else {
-                if (imglist[tempshowimg]==imglist[cursorimg]){
-                    showedimg[tempshowimg] = 1
-                    showedimg[cursorimg] = 1
+
+
+        p.setup = function () {
+            p.createCanvas(50*gridsize, 50*gridsize);
+            p.background('#000');
+        }
+
+        var cursorimg = -1;
+        var showedimg = {};
+        var tempshowimg = -1;
+        var tempshowimg2 = -1;
+
+        p.draw = function () {
+            p.background('#EEEEEE');
+
+            //For (var BEGIN; END; INTERVAL){
+            //DO SOMETHING }
+            var nowimgnum = 0;
+            cursorimg = -1;
+            for (var x = 0; x < p.width; x += p.width / gridsize) {
+                for (var y = 0; y < p.height; y += p.height / gridsize) {
+                    p.stroke(0);
+                    p.strokeWeight(1);
+                    if ((p.mouseX>x&&p.mouseX<x+p.width/gridsize&&p.mouseY>y&&p.mouseY<y+p.height/gridsize)){
+                        cursorimg = nowimgnum;
+                    }
+                    if (
+                        showedimg[nowimgnum]||
+                        nowimgnum==tempshowimg||
+                        nowimgnum==tempshowimg2
+                    ){
+                        p.image(imglist[nowimgnum],x,y,50,50);
+                    }
+                    
+                    nowimgnum++;
+                    p.line(x, 0, x, p.height);
+                    p.line(0, y, p.width, y);
+                }
+                p.line(p.width, 0, p.width, p.height);
+                p.line(0, p.height, p.width, p.height);
+            }
+            // image(img,0,0,50,50)
+        }
+
+        var waiting = 0;
+        p.mouseClicked = function () {
+            if (cursorimg==tempshowimg||cursorimg==tempshowimg2||showedimg[cursorimg]||waiting)
+                return;
+            if (cursorimg!=-1){
+                totalclick++;
+                if (tempshowimg==-1){
+                    tempshowimg = cursorimg;
+                } else {
+                    if (imglist[tempshowimg]==imglist[cursorimg]){
+                        showedimg[tempshowimg] = 1
+                        showedimg[cursorimg] = 1
+                        tempshowimg = -1
+                        tempshowimg2 = -1
+                    } else {
+                        waiting = 1;
+                        tempshowimg2 = cursorimg
+                        setTimeout(function(){
+                            tempshowimg = -1;
+                            tempshowimg2 = -1;
+                            waiting = 0;
+                        },500)
+                        
+                    }
+                }
+            }
+
+            if (p.won()){
+                setTimeout(() => {
+                    alert('You Win');
+                    showedimg = {}
                     tempshowimg = -1
                     tempshowimg2 = -1
-                } else {
-                    tempshowimg2 = cursorimg
-                    setTimeout(function(){
-                        tempshowimg = -1;
-                        tempshowimg2 = -1;
-                    },500)
-                    
-                }
+                    imglist = p.shuffle(imglist)
+                    totalclick = 0
+                    return;
+                }, 500);
+                
             }
         }
 
+        p.won = function (){
+            for (var j=0; j<gridsize*gridsize; j++){
+                if (!showedimg[j])
+                    return 0;
+            }
+            return 1;
+        }
         
     }
 
-    function won(){
-        for (var j=0; j<100; j++){
-            if (!showedimg[j])
-                return 0;
-        }
-        return 1;
-    }
+    var myp5 = new p5(board1, 'board1');
     
     
     </script>
