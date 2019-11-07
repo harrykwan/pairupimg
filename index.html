@@ -15,8 +15,9 @@
             font-family: 'McLaren', cursive;
           }
       </style>
-     
+    
     <div id="board2"></div>
+    <div style="margin-bottom: 20px;"> Grid Width: <input onchange="changegridsize(this.value)" style="margin-left: 10px; width: 30px;" value="6"></div>
     <div id="board1"></div>
 
     <!-- <h1>PAIR-UP IMAGE</h1> -->
@@ -29,6 +30,15 @@
     <script>           
 
     var totalclick = 0;
+    var gridsize = 6;
+    
+    function changegridsize(x){
+        myp5_board1.resetall()
+        gridsize = x;
+        myp5_board1.preload()
+        myp5_board1.setup()
+        
+    }
 
     var board2 = function(p){
         var myfont = p.loadFont('McLaren-Regular.ttf');
@@ -36,8 +46,8 @@
         p.setup = function() {
             p.createCanvas(500, 230);
             
-            
         }
+
         p.draw = function () {
             p.clear();
             p.textSize(15);
@@ -54,7 +64,7 @@
             p.text('Total Clicked: '+totalclick, 0, 200);
         }
     }
-    var myp5 = new p5(board2, 'board2');
+    var myp5_board2 = new p5(board2, 'board2');
     
 
 
@@ -62,8 +72,6 @@
 
         let imglist = [];
         let imgnum = 10;
-        let gridsize = 6;
-        let h1font, pfont;
 
         p.shuffle = function (a) {
             for (var j=0; j<a.length; j++) {
@@ -76,6 +84,7 @@
         }
 
         p.preload = function () {
+            imglist = [];
             // imgnum = random(0,800);
             for (var j=0; j<gridsize*gridsize/2; j++){
                 imglist[j] = p.createImg('https://picsum.photos/id/'+parseInt(j+imgnum)+'/200/200');
@@ -91,6 +100,7 @@
         p.setup = function () {
             p.createCanvas(50*gridsize, 50*gridsize);
             p.background('#000');
+            
         }
 
         var cursorimg = -1;
@@ -130,6 +140,14 @@
             // image(img,0,0,50,50)
         }
 
+        p.resetall = function () {
+            showedimg = {}
+            tempshowimg = -1
+            tempshowimg2 = -1
+            imglist = p.shuffle(imglist)
+            totalclick = 0
+        }
+
         var waiting = 0;
         p.mouseClicked = function () {
             if (cursorimg==tempshowimg||cursorimg==tempshowimg2||showedimg[cursorimg]||waiting)
@@ -160,11 +178,7 @@
             if (p.won()){
                 setTimeout(() => {
                     alert('You Win');
-                    showedimg = {}
-                    tempshowimg = -1
-                    tempshowimg2 = -1
-                    imglist = p.shuffle(imglist)
-                    totalclick = 0
+                    p.resetall()
                     return;
                 }, 500);
                 
@@ -181,7 +195,7 @@
         
     }
 
-    var myp5 = new p5(board1, 'board1');
+    var myp5_board1 = new p5(board1, 'board1');
     
     
     </script>
